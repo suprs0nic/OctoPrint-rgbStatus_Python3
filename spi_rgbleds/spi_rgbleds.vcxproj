@@ -68,7 +68,10 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>$(SolutionDir)include;C:\Python27\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Python27\libs;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -110,6 +113,27 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="bcm2835.h" />
+    <ClInclude Include="helpers.h" />
+    <ClInclude Include="interface.h" />
+    <ClInclude Include="RgbLightConstant.h" />
+    <ClInclude Include="RgbLightHandler.h" />
+    <ClInclude Include="PwmDriver.h" />
+    <ClInclude Include="RgbLightOnOff.h" />
+    <ClInclude Include="RgbLightPattern.h" />
+    <ClInclude Include="RgbLightPulsing.h" />
+    <ClInclude Include="spi.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="bcm2835.c" />
+    <ClCompile Include="interface.cpp" />
+    <ClCompile Include="RgbLightHandler.cpp" />
+    <ClCompile Include="RgbLightOnOff.cpp" />
+    <ClCompile Include="RgbLightPattern.cpp" />
+    <ClCompile Include="PwmDriver.cpp" />
+    <ClCompile Include="RgbLightConstant.cpp" />
+    <ClCompile Include="RgbLightPulsing.cpp" />
+    <ClCompile Include="spi.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
