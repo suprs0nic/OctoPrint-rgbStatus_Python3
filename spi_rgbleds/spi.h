@@ -14,6 +14,7 @@
 #include <string>
 #include <iostream>
 #include <cstring>
+#include <time.h>
 
 #include "bcm2835.h"
 #define CS_PIN		RPI_V2_GPIO_P1_24	// The chip select pin for SPI0
@@ -24,9 +25,7 @@ static unsigned char spi_mode;
 static unsigned char spi_bitsPerWord;
 static unsigned int spi_speed;
 
-static struct timespec tim;
-tim.tv_sec = 0;
-tim.tv_nsec = 1000; // 1 us
+static struct timespec tim {0, 1000 }; // 1us
 
 #endif
 
