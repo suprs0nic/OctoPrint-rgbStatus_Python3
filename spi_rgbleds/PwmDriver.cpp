@@ -15,7 +15,7 @@ PwmDriver::~PwmDriver()
 void PwmDriver::setRgbw(vector<float> left, vector<float> right)
 {
 	// Find the number of bytes to send (includes space for the empty ports)
-	const int nBytes = 2*PWM_BITS_PER_COLOR + PWM_BITS_PER_COLOR * NUM_COLORS * NUM_LEDS / 8;
+	const int nBytes = 2*PWM_BITS_PER_COLOR/8 + PWM_BITS_PER_COLOR * NUM_COLORS * NUM_LEDS / 8;
 	unsigned char dataBuffer[nBytes] = { 0 };
 
 	// Only 12 bits per color is currently supported
