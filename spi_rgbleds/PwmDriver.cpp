@@ -11,10 +11,11 @@ PwmDriver::~PwmDriver()
 }
 
 // Send RGBW color data to the left and right PWM controllers
+// We use ports 0-3 for left, 6-9 for right
 void PwmDriver::setRgbw(vector<float> left, vector<float> right)
 {
-	// Find the number of bytes to send
-	const int nBytes = PWM_BITS_PER_COLOR * NUM_COLORS * NUM_LEDS / 8;
+	// Find the number of bytes to send (includes space for the empty ports)
+	const int nBytes = 2*PWM_BITS_PER_COLOR + PWM_BITS_PER_COLOR * NUM_COLORS * NUM_LEDS / 8;
 	unsigned char dataBuffer[nBytes] = { 0 };
 
 	// Only 12 bits per color is currently supported
@@ -44,6 +45,10 @@ void PwmDriver::setRgbw(vector<float> left, vector<float> right)
 			dataBuffer[j + 2] = (b2 & 0x0FF);
 
 			j += 3;
+
+			// Skip port 4, 5
+			if (j == 6)
+				j += 3;
 		}
 	}
 

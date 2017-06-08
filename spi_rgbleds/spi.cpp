@@ -26,7 +26,6 @@ int spiWrite(unsigned char *data, int length)
 int spiOpen()
 {
 	int status_value = -1;
-	int spi_cs_fd;
 
 	// SpiDev keeps CS low or high the entire transfer,
 	// but we just want a short blip after the transfer.
@@ -154,6 +153,7 @@ int spiWrite(unsigned char *data, int length)
 
 	// Shortly blip the CS port
 	bcm2835_gpio_write(CS_PIN, HIGH);
+	nanosleep(1000);
 	bcm2835_gpio_write(CS_PIN, LOW);
 
 	return retVal;
