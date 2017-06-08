@@ -153,7 +153,7 @@ int spiWrite(unsigned char *data, int length)
 
 	// Shortly blip the CS port
 	bcm2835_gpio_write(CS_PIN, HIGH);
-	nanosleep(1000);
+	nanosleep(&tim, NULL);
 	bcm2835_gpio_write(CS_PIN, LOW);
 
 	return retVal;

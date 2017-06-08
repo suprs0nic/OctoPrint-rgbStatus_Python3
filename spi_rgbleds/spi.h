@@ -24,6 +24,10 @@ static unsigned char spi_mode;
 static unsigned char spi_bitsPerWord;
 static unsigned int spi_speed;
 
+static struct timespec tim;
+tim.tv_sec = 0;
+tim.tv_nsec = 1000; // 1 us
+
 #endif
 
 int spiOpen();
