@@ -1,6 +1,11 @@
 #include "RgbLightConstant.h"
 
-vector<float> RgbLightConstant::getColor()
+const float * RgbLightConstant::getColor()
 {
 	return this->baseColor;
+}
+
+RgbLightConstant::~RgbLightConstant()
+{
+
 }

@@ -1,6 +1,6 @@
 #include "RgbLightHandler.h"
 
-RgbLightHandler::RgbLightHandler(vector<float> defaultColor)
+RgbLightHandler::RgbLightHandler(const float defaultColor[NUM_COLORS] )
 {
 	patternLeft = new RgbLightConstant(defaultColor);
 	patternRight = new RgbLightConstant(defaultColor);
@@ -11,7 +11,7 @@ RgbLightHandler::RgbLightHandler(vector<float> defaultColor)
 	transitionsEnabled = false;
 }
 
-RgbLightHandler::RgbLightHandler(vector<float> defaultColor, unsigned int transitionRefreshInterval, unsigned int transitionTime)
+RgbLightHandler::RgbLightHandler(const float defaultColor[NUM_COLORS] , unsigned int transitionRefreshInterval, unsigned int transitionTime)
 {
 	patternLeft = new RgbLightConstant(defaultColor);
 	patternRight = new RgbLightConstant(defaultColor);
@@ -116,8 +116,9 @@ void RgbLightHandler::worker()
 	this->isRunning = true;
 
 	int interval = 20;
-	vector<float> colorLeft = { 0.0f, 0.0f, 0.0f, 0.0f };
-	vector<float> colorRight = { 0.0f, 0.0f, 0.0f, 0.0f };
+
+	float colorDefault[NUM_COLORS] = { 0.0f };
+	const float * colorLeft = colorDefault, * colorRight = colorDefault;
 
 	// If !isRunning, the thread is requested to finish
 	while (this->isRunning)
@@ -151,14 +152,17 @@ void RgbLightHandler::worker()
 }
 
 // Transition from pattern a to b for both left and right LEDs
-void RgbLightHandler::transitionBoth(vector<float> leftFrom, vector<float> rightFrom)
+void RgbLightHandler::transitionBoth(const float leftFrom[NUM_COLORS], const float rightFrom[NUM_COLORS])
 {
 	// Find the targets
-	vector<float> leftTo = this->patternLeft->getColor(); 
-	vector<float> rightTo = this->patternRight->getColor();
+	const float * leftTo = this->patternLeft->getColor();
+	const float * rightTo = this->patternRight->getColor();
 
-	vector<float> leftDelta = { 0.0f, 0.0f, 0.0f, 0.0f };
-	vector<float> rightDelta = { 0.0f, 0.0f, 0.0f, 0.0f };
+	float leftDelta[NUM_COLORS]  = { 0.0f };
+	float rightDelta[NUM_COLORS]  = { 0.0f };
+
+	float left[NUM_COLORS] = { 0.0f };
+	float right[NUM_COLORS] = { 0.0f };
 
 	// Use a float here, so we only have to cast once
 	float maxi = this->transitionTime / (float)this->transitionRefreshInterval;
@@ -170,6 +174,8 @@ void RgbLightHandler::transitionBoth(vector<float> leftFrom, vector<float> right
 	// Calculate the color delta per step for both left and right
 	for (int j = 0; j < NUM_COLORS; j++)
 	{
+		left[j] = leftFrom[j];
+		right[j] = rightFrom[j];
 		leftDelta[j] = (leftTo[j] - leftFrom[j]) / maxi;
 		rightDelta[j] = (rightTo[j] - rightFrom[j]) / maxi;
 	}
@@ -180,11 +186,11 @@ void RgbLightHandler::transitionBoth(vector<float> leftFrom, vector<float> right
 		// Calculate the current colors
 		for (int j = 0; j < NUM_COLORS; j++)
 		{
-			leftFrom[j] = max(min(leftFrom[j] + leftDelta[j], 1.0f), 0.0f);
-			rightFrom[j] = max(min(rightFrom[j] + rightDelta[j], 1.0f), 0.0f);
+			left[j] = max(min(left[j] + leftDelta[j], 1.0f), 0.0f);
+			right[j] = max(min(right[j] + rightDelta[j], 1.0f), 0.0f);
 		}
 
-		pwmDriver->setRgbw(leftFrom, rightFrom);
+		pwmDriver->setRgbw(left, right);
 		this_thread::sleep_for(chrono::milliseconds(this->transitionRefreshInterval));
 	}
 }

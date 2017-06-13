@@ -10,9 +10,10 @@ using namespace std;
 
 class RgbLightConstant : public RgbLightPattern {
 public:
-	RgbLightConstant(vector<float> baseColor) : RgbLightPattern(baseColor) { this->refreshInterval = 200; };
-	vector<float> getColor();
+	RgbLightConstant(const float baseColor[NUM_COLORS]) : RgbLightPattern(baseColor) { this->refreshInterval = 200; };
+	const float * getColor();
 	RgbLightPattern* clone() const { return new RgbLightConstant(*this); }
+	~RgbLightConstant();
 };
 
 #endif // !RGBLIGHTCONSTANT_H

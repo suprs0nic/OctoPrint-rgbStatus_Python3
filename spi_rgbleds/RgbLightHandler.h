@@ -35,10 +35,10 @@ private:
 	mutex patternMutex;
 
 	void worker();
-	void transitionBoth(vector<float> leftFrom, vector<float> rightFrom);
+	void transitionBoth(const float leftFrom[NUM_COLORS], const float rightFrom[NUM_COLORS]);
 public:
-	RgbLightHandler(vector<float> defaultColor);
-	RgbLightHandler(vector<float> defaultColor, unsigned int transitionRefreshInterval, unsigned int transitionTime);
+	RgbLightHandler(const float defaultColor[NUM_COLORS] );
+	RgbLightHandler(const float defaultColor[NUM_COLORS] , unsigned int transitionRefreshInterval, unsigned int transitionTime);
 	~RgbLightHandler();
 
 	void start();

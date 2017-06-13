@@ -9,7 +9,7 @@ PyObject * initialize(PyObject * self, PyObject *args, PyObject *kwargs, char *k
 {
 	char *kwlist[] = { "color", "transitionsEnabled", "transitionRefreshInterval", "transitionTime",  NULL };
 
-	vector<float> color = { 0.0f, 0.0f, 0.0f, 0.0f };
+	float color[NUM_COLORS] = { 0.0f, 0.0f, 0.0f, 0.0f };
 
 	bool transitionsEnabled = false;
 	unsigned int transitionRefreshInterval = 20;
@@ -56,7 +56,7 @@ PyObject * set_constant_color(PyObject *self, PyObject *args, PyObject *kwargs, 
 		return Py_BuildValue("O", Py_False);
 
 	char target = 0;
-	vector<float> color = { 0.0f, 0.0f, 0.0f, 0.0f };
+	float color[NUM_COLORS] = { 0.0f, 0.0f, 0.0f, 0.0f };
 	char *kwlist[] = { "target", "color", NULL };
 
 	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "i(ffff)", kwlist,
@@ -74,7 +74,7 @@ PyObject * set_pulsing_color(PyObject *self, PyObject *args, PyObject *kwargs, c
 		return Py_BuildValue("O", Py_False);
 
 	char target = 0;
-	vector<float> color = { 0.0f, 0.0f, 0.0f, 0.0f };
+	float color[NUM_COLORS] = { 0.0f, 0.0f, 0.0f, 0.0f };
 	int speed = 0;
 	char *kwlist[] = { "target", "color", "speed", NULL };
 
@@ -94,7 +94,7 @@ PyObject * set_onoff_color(PyObject *self, PyObject *args, PyObject *kwargs, cha
 		return Py_BuildValue("O", Py_False);
 
 	char target = 0;
-	vector<float> color = { 0.0f, 0.0f, 0.0f, 0.0f };
+	float color[NUM_COLORS] = { 0.0f, 0.0f, 0.0f, 0.0f };
 	int speed = 0;
 	char *kwlist[] = { "target", "color", "speed", NULL };
 
@@ -121,14 +121,20 @@ void set_pattern(RgbLightPattern * pattern, char target)
 int main(int argc, char* argv[])
 {
 #ifdef _DEBUG
-	RgbLightConstant * solid1 = new RgbLightConstant({ 1.0, 0.0, 0.0, 0.0 });
-	RgbLightConstant * solid2 = new RgbLightConstant({ 0.0, 1.0, 0.0, 0.0 });
-	RgbLightHandler * handler = new RgbLightHandler({ 0.0, 0.0, 0.0, 1.0 });
+	const float red[4] = { 1.0, 0.0, 0.0, 0.0 };
+	const float green[4] = { 0.0, 1.0, 0.0, 0.0 };
+	const float blue[4] = { 0.0, 0.0, 1.0, 0.0 };
+	const float white[4] = { 0.0, 0.0, 0.0, 1.0 };
+	RgbLightConstant * solid1 = new RgbLightConstant(red);
+	RgbLightConstant * solid2 = new RgbLightConstant(green);
+	RgbLightPulsing * pulsing1 = new RgbLightPulsing(blue, 1000);
+	RgbLightHandler * handler = new RgbLightHandler(white, 50, 200);
 	handler->start();
 	handler->setPatterns(solid1);
 	this_thread::sleep_for(chrono::seconds(1));
 	handler->setPatterns(solid2);
-	//driver->setRgbw({ 1.0, 0.0, 0.0, 0.0 }, { 1.0, 0.0, 0.0, 0.0 });
+	this_thread::sleep_for(chrono::seconds(1));
+	handler->setPatterns(pulsing1);
 	this_thread::sleep_for(chrono::seconds(60));
 	handler->stop();
 	delete handler;

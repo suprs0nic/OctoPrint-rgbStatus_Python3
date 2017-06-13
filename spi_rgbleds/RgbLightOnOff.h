@@ -15,10 +15,10 @@ class RgbLightOnOff : public RgbLightPattern {
 	int speed = 1000; // Speed in milliseconds
 
 public:
-	RgbLightOnOff(vector<float> baseColor, unsigned int speed);
-	vector<float> getColor();
+	RgbLightOnOff(float baseColor[NUM_COLORS], unsigned int speed);
+	const float *getColor();
 	RgbLightPattern* clone() const { return new RgbLightOnOff(*this); }
-
+	~RgbLightOnOff();
 };
 
 #endif // RGBLIGHTONOFF_H

@@ -5,8 +5,6 @@
 #define PWM_RESOLUTION 4095
 #define PWM_BITS_PER_COLOR 12
 
-#include <vector>
-
 #include "spi.h"
 #include "helpers.h"
 
@@ -17,7 +15,7 @@ class PwmDriver
 public:
 	PwmDriver();	
 	~PwmDriver();
-	void setRgbw(vector<float> left, vector<float> right);
+	void setRgbw(const float left[NUM_COLORS] , const float right[NUM_COLORS] );
 };
 
 #endif

@@ -16,16 +16,16 @@ class RgbLightPulsing : public RgbLightPattern {
 	int maxi = 0;
 
 	int speed = 1000; // Speed in milliseconds
-	vector<float> currentColor = { 0.0f, 0.0f, 0.0f, 0.0f };
-	vector<float> fromColor = { 0.0f, 0.0f, 0.0f, 0.0f };
-	vector<float> toColor = { 0.0f, 0.0f, 0.0f, 0.0f };
 
-	vector<float> deltaColor = { 0.0f, 0.0f, 0.0f, 0.0f };
+	float currentColor[NUM_COLORS] = { 0.0f };
+	float fromColor[NUM_COLORS] = { 0.0f };
+	float deltaColor[NUM_COLORS] = { 0.0f };
 
 public:
-	RgbLightPulsing(vector<float> baseColor, unsigned int speed);
-	vector<float> getColor();
+	RgbLightPulsing(const float baseColor[NUM_COLORS], unsigned int speed);
+	const float * getColor ();
 	RgbLightPattern* clone() const { return new RgbLightPulsing(*this); }
+	~RgbLightPulsing();
 
 };
 

@@ -2,19 +2,20 @@
 #ifndef RGBLIGHTPATTERN_H
 #define RGBLIGHTPATTERN_H 1
 
-#include <vector>
+#include "helpers.h"
 
 using namespace std;
 
 class RgbLightPattern
 {
 protected:
-	vector<float> baseColor;
+	const float defaultColor[NUM_COLORS] = { 0.0f };
+	const float * baseColor = defaultColor;
 public:
 	unsigned int refreshInterval = 20; //ms
-	RgbLightPattern(vector<float> baseColor);
-	~RgbLightPattern();
-	virtual vector<float> getColor()=0;
+	RgbLightPattern(const float baseColor[NUM_COLORS]);
+	virtual ~RgbLightPattern()=0;
+	virtual const float * getColor ()=0;
 	virtual RgbLightPattern* clone() const = 0;
 };
 

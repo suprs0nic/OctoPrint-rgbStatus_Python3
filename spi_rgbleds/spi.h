@@ -20,13 +20,6 @@
 #define CS_PIN		RPI_V2_GPIO_P1_24	// The chip select pin for SPI0
 #define SPI_DEVICE "/dev/spidev0.0"
 
-static int spi_cs_fd;
-static unsigned char spi_mode;
-static unsigned char spi_bitsPerWord;
-static unsigned int spi_speed;
-
-static struct timespec tim {0, 1000 }; // 1us
-
 #endif
 
 int spiOpen();

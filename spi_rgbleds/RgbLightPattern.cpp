@@ -1,6 +1,6 @@
 #include "RgbLightPattern.h"
 
-RgbLightPattern::RgbLightPattern(vector<float> baseColor)
+RgbLightPattern::RgbLightPattern(const float baseColor[NUM_COLORS])
 {
 	this->baseColor = baseColor;
 }

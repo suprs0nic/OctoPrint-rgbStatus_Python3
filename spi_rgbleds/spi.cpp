@@ -1,5 +1,10 @@
 #include "spi.h"
 
+static int spi_cs_fd;
+static unsigned char spi_mode;
+static unsigned char spi_bitsPerWord;
+static unsigned int spi_speed;
+
 #ifdef _WIN32
 
 int spiOpen()
@@ -16,12 +21,17 @@ int spiClose()
 
 int spiWrite(unsigned char *data, int length)
 {
+	for (int i = 0; i < length; i++)
+		printf("%2x ", data[i]);
+	printf("\n");
 	return 0;
 }
 
 #endif
 
 #ifdef __linux__
+
+static struct timespec tim { 0, 1000 }; // 1us
 
 int spiOpen()
 {
@@ -153,7 +163,7 @@ int spiWrite(unsigned char *data, int length)
 
 	// Shortly blip the CS port
 	bcm2835_gpio_write(CS_PIN, HIGH);
-	nanosleep(&tim, NULL);
+	//nanosleep(&tim, NULL);
 	bcm2835_gpio_write(CS_PIN, LOW);
 
 	return retVal;
