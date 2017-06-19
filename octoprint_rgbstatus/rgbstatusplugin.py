@@ -16,11 +16,11 @@ class RgbStatusPlugin(SettingsPlugin, BlueprintPlugin, ShutdownPlugin):
         self._default_color = (0., 0., 1., 0.) # Blue
         self._lights_enabled = False
 
+    def initialize(self):
         # Initialize with default color "off", and enable transitions of 200ms with a refresh rate of 20ms
         spirgbleds.initialize(color=(0.0,0.0,0.0,0.0), transitionsEnabled=True, transitionRefreshInterval=20, transitionTime=200)
         spirgbleds.start()
 
-    def initialize(self):
         self._lights_enabled = self._settings.get_boolean(["lights_enabled"])
         self._set_events()
         self.on_startup()
