@@ -2,7 +2,10 @@
 
 const float * RgbLightConstant::getColor()
 {
-	return this->baseColor;
+	for (i = 0; i < NUM_COLORS; i++) {
+		this->currentColor[i] = this->baseColor[i];
+	}
+	return this->currentColor;
 }
 
 RgbLightConstant::~RgbLightConstant()

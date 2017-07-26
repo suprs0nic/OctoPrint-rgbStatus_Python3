@@ -9,6 +9,8 @@
 using namespace std;
 
 class RgbLightConstant : public RgbLightPattern {
+	int i = 0;
+	float currentColor[NUM_COLORS] = { 0.0f };
 public:
 	RgbLightConstant(const float baseColor[NUM_COLORS]) : RgbLightPattern(baseColor) { this->refreshInterval = 200; };
 	const float * getColor();

@@ -17,7 +17,7 @@ RgbLightPulsing::~RgbLightPulsing()
 }
 
 const float * RgbLightPulsing::getColor()
-{
+{	
 	if (this->i >= this->maxi)
 	{
 		this->i = 0;
@@ -31,12 +31,14 @@ const float * RgbLightPulsing::getColor()
 	if (this->i <= this->maxi / 2)
 	{
 		for (int j = 0; j < NUM_COLORS; j++)
-			this->currentColor[j] = min(this->currentColor[j] + this->deltaColor[j], 1.0f);
+			//this->currentColor[j] = min(this->currentColor[j] + this->deltaColor[j], 1.0f);
+			this->currentColor[j] = this->baseColor[j];
 	}
 	else
 	{
 		for (int j = 0; j < NUM_COLORS; j++)
-			this->currentColor[j] = max(this->currentColor[j] - this->deltaColor[j], 0.0f);
+			//this->currentColor[j] = max(this->currentColor[j] - this->deltaColor[j], 0.0f);
+			this->currentColor[j] = this->baseColor[j];
 	}
 
 	return this->currentColor;

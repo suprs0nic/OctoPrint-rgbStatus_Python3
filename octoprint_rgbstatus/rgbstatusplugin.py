@@ -91,7 +91,7 @@ class RgbStatusPlugin(SettingsPlugin, BlueprintPlugin, ShutdownPlugin):
     # dict and lookup the color/pattern/target
 
     def on_lights_off(self):
-        self._send_color(RgbTarget.BOTH, RgbPatterns.CONSTANT, (0.0,0.0,0.0,0.0))
+        self._send_color(RgbTarget.BOTH, RgbPatterns.NORMAL_PULSING, (0.0,0.0,0.0,0.0))
         self._logger.debug("Switching the lights off")
 
     def on_startup(self):
@@ -102,7 +102,7 @@ class RgbStatusPlugin(SettingsPlugin, BlueprintPlugin, ShutdownPlugin):
     def on_idle(self):
         color_hex = self._settings.get(["idle_color"])
         self._logger.debug("Setting idle color: %s" % color_hex)
-        self._send_color(RgbTarget.BOTH, RgbPatterns.CONSTANT, color_hex)
+        self._send_color(RgbTarget.BOTH, RgbPatterns.NORMAL_PULSING, color_hex)
 
     def on_error(self):
         color_hex = self._settings.get(["error_color"])
@@ -112,22 +112,22 @@ class RgbStatusPlugin(SettingsPlugin, BlueprintPlugin, ShutdownPlugin):
     def on_heating(self):
         color_hex = self._settings.get(["heating_color"])
         self._logger.debug("Setting heating color: %s" % color_hex)
-        self._send_color(RgbTarget.BOTH, RgbPatterns.SLOW_PULSING, color_hex)
+        self._send_color(RgbTarget.BOTH, RgbPatterns.NORMAL_PULSING, color_hex)
 
     def on_printing(self):
         color_hex = self._settings.get(["printing_color"])
         self._logger.debug("Setting printing color: %s" % color_hex)
-        self._send_color(RgbTarget.BOTH, RgbPatterns.CONSTANT, color_hex)
+        self._send_color(RgbTarget.BOTH, RgbPatterns.SLOW_PULSING, color_hex)
 
     def on_paused(self):
         color_hex = self._settings.get(["paused_color"])
         self._logger.debug("Setting printing color: %s" % color_hex)
-        self._send_color(RgbTarget.BOTH, RgbPatterns.CONSTANT, color_hex)
+        self._send_color(RgbTarget.BOTH, RgbPatterns.NORMAL_PULSING, color_hex)
 
     def on_finished(self):
         color_hex = self._settings.get(["finished_color"])
         self._logger.debug("Setting finished color: %s" % color_hex)
-        self._send_color(RgbTarget.BOTH, RgbPatterns.CONSTANT, color_hex)
+        self._send_color(RgbTarget.BOTH, RgbPatterns.NORMAL_PULSING, color_hex)
 
     # End color mapping
 
