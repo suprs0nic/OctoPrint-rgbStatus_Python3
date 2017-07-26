@@ -54,7 +54,7 @@ class RgbStatusPlugin(SettingsPlugin, BlueprintPlugin, ShutdownPlugin):
     @BlueprintPlugin.route("/preview/<string:hex_color>", methods=["POST"])
     def preview(self, color_hex):
         self._logger.debug("Previewing color: %s" % color_hex)
-        self._send_color(RgbTarget.BOTH, RgbPatterns.CONSTANT, color_hex)
+        self._send_color(RgbTarget.BOTH, RgbPatterns.NORMAL_PULSING, color_hex)
 
     @BlueprintPlugin.route("/restore", methods=["POST"])
     def restore(self):
@@ -117,7 +117,7 @@ class RgbStatusPlugin(SettingsPlugin, BlueprintPlugin, ShutdownPlugin):
     def on_printing(self):
         color_hex = self._settings.get(["printing_color"])
         self._logger.debug("Setting printing color: %s" % color_hex)
-        self._send_color(RgbTarget.BOTH, RgbPatterns.SLOW_PULSING, color_hex)
+        self._send_color(RgbTarget.BOTH, RgbPatterns.NORMAL_PULSING, color_hex)
 
     def on_paused(self):
         color_hex = self._settings.get(["paused_color"])

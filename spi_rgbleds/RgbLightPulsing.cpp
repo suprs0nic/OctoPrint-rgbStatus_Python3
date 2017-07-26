@@ -7,8 +7,10 @@ RgbLightPulsing::RgbLightPulsing(const float baseColor[NUM_COLORS], unsigned int
 	this->maxi = speed / this->refreshInterval;
 
 	// Calculate the change in color per step beforehand
-	for (int j = 0; j < NUM_COLORS; j++)
+	for (int j = 0; j < NUM_COLORS; j++) {
 		this->deltaColor[j] = (this->baseColor[j] - this->fromColor[j]) / (this->maxi / 2.0f);
+		this->currentColor[j] = this->baseColor[j];
+	}
 }
 
 RgbLightPulsing::~RgbLightPulsing()
@@ -17,7 +19,8 @@ RgbLightPulsing::~RgbLightPulsing()
 }
 
 const float * RgbLightPulsing::getColor()
-{	
+{
+/*
 	if (this->i >= this->maxi)
 	{
 		this->i = 0;
@@ -40,6 +43,6 @@ const float * RgbLightPulsing::getColor()
 			//this->currentColor[j] = max(this->currentColor[j] - this->deltaColor[j], 0.0f);
 			this->currentColor[j] = this->baseColor[j];
 	}
-
+*/
 	return this->currentColor;
 }
