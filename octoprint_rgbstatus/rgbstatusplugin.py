@@ -44,7 +44,7 @@ class RgbStatusPlugin(SettingsPlugin, BlueprintPlugin, ShutdownPlugin):
             "idle_color":       "#0000FF",      # Blue
             "paused_color":     "#00BFBE",      # Cyan
             "error_color":      "#FF0000",      # Red
-            "heating_color":    "#FFC901",      # Orange
+            "heating_color":    "#FF8000",      # Orange
             "printing_color":   "#000000FF",    # White
             "finished_color":   "#00FF00"       # Green
         }
@@ -97,7 +97,7 @@ class RgbStatusPlugin(SettingsPlugin, BlueprintPlugin, ShutdownPlugin):
     def on_startup(self):
         color_hex = self._settings.get(["startup_color"])
         self._logger.debug("Setting startup color: %s" % color_hex)
-        self._send_color(RgbTarget.BOTH, RgbPatterns.NORMAL_PULSING, color_hex)
+        self._send_color(RgbTarget.BOTH, RgbPatterns.CONSTANT, color_hex)
 
     def on_idle(self):
         color_hex = self._settings.get(["idle_color"])
@@ -107,12 +107,12 @@ class RgbStatusPlugin(SettingsPlugin, BlueprintPlugin, ShutdownPlugin):
     def on_error(self):
         color_hex = self._settings.get(["error_color"])
         self._logger.debug("Setting error color: %s" % color_hex)
-        self._send_color(RgbTarget.BOTH, RgbPatterns.SLOW_PULSING, color_hex)
+        self._send_color(RgbTarget.BOTH, RgbPatterns.CONSTANT, color_hex)
 
     def on_heating(self):
         color_hex = self._settings.get(["heating_color"])
         self._logger.debug("Setting heating color: %s" % color_hex)
-        self._send_color(RgbTarget.BOTH, RgbPatterns.NORMAL_PULSING, color_hex)
+        self._send_color(RgbTarget.BOTH, RgbPatterns.CONSTANT, color_hex)
 
     def on_printing(self):
         color_hex = self._settings.get(["printing_color"])
