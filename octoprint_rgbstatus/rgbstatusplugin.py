@@ -1,9 +1,11 @@
 from binascii import unhexlify
-from flask import jsonify
+from flask import jsonify, make_response
 
 from octoprint.plugin import SettingsPlugin, BlueprintPlugin, ShutdownPlugin
 
 import spirgbleds
+import json
+import os.path
 
 from octoprint.events import Events
 #from octoprint_lui.constants import LuiEvents
@@ -36,25 +38,71 @@ class RgbStatusPlugin(SettingsPlugin, BlueprintPlugin, ShutdownPlugin):
             self._heating = heating
             self._find_current_state()
            
+
+
     def get_settings_defaults(self):
         return {
-            
             "lights_enabled":   True,
             "startup_color":    "#0000FF",      # Blue
+            "startup_pattern": RgbPatterns.NORMAL_PULSING,
             "idle_color":       "#0000FF",      # Blue
+            "idle_pattern":     RgbPatterns.CONSTANT,
             "paused_color":     "#00BFBE",      # Cyan
+            "paused_pattern":   RgbPatterns.CONSTANT,
             "error_color":      "#FF0000",      # Red
+            "error_pattern":    RgbPatterns.SLOW_PULSING,
             "heating_color":    "#FF8000",      # Orange
+            "heating_pattern":  RgbPatterns.NORMAL_PULSING,
             "printing_color":   "#000000FF",    # White
-            "finished_color":   "#00FF00"       # Green
+            "printing_pattern": RgbPatterns.CONSTANT,
+            "finished_color":   "#00FF00",      # Green
+            "finished_pattern": RgbPatterns.CONSTANT
         }
+
     
     # Begin RGB status API
 
-    @BlueprintPlugin.route("/preview/<string:hex_color>", methods=["POST"])
-    def preview(self, color_hex):
-        self._logger.debug("Previewing color: %s" % color_hex)
-        self._send_color(RgbTarget.BOTH, RgbPatterns.NORMAL_PULSING, color_hex)
+    @BlueprintPlugin.route("/preview/<string:hex_color>/<string:pattern>", methods=["GET"])
+    def preview(self, hex_color, pattern):
+        self._logger.debug("Previewing color: %s" % hex_color)
+        self._send_color(RgbTarget.BOTH, pattern, "#" + hex_color)
+        return make_response(jsonify({"color": hex_color}))
+
+    @BlueprintPlugin.route("/setcolor/<string:name>/<string:hex_color>/<string:pattern>", methods=["GET"])
+    def setcolor(self, name, hex_color, pattern):
+        setcolor = name + "_color"
+        setpattern = name + "_pattern"
+        self._settings.set([setcolor], "#" + hex_color)
+        self._settings.set([setpattern], pattern)
+        self._settings.save()
+        return make_response(jsonify({"color": self._settings.get([setcolor])}))
+
+    @BlueprintPlugin.route("/getcolor/<string:name>", methods=["GET"])
+    def getcolor(self, name):
+        getcolor = name + "_color"
+        getpattern = name + "_pattern"
+        color = self._settings.get([getcolor])
+        pattern = self._settings.get([getpattern])
+        return make_response(jsonify({ "color": color, "pattern": pattern }))
+
+    @BlueprintPlugin.route("/getdefault/<string:name>", methods=["GET"])
+    def getdefault(self, name):
+        getcolor = name + "_color"
+        getpattern = name + "_pattern"
+        defaultvars = self.get_settings_defaults()
+        color = defaultvars[getcolor]
+        pattern = defaultvars[getpattern]
+        return make_response(jsonify({ "color": color, "pattern": pattern }))
+
+    @BlueprintPlugin.route("/setdefault/all", methods=["GET"])
+    def setdefault_all(self):
+        defaultvars = self.get_settings_defaults()
+        #self._settings.set(defaultvars)
+        for key in defaultvars.keys():
+            self._settings.set([key],defaultvars.get(key))
+        self._settings.save()
+        return make_response(jsonify({"Settings": defaultvars.get(key)}))
+
 
     @BlueprintPlugin.route("/restore", methods=["POST"])
     def restore(self):
@@ -96,38 +144,45 @@ class RgbStatusPlugin(SettingsPlugin, BlueprintPlugin, ShutdownPlugin):
 
     def on_startup(self):
         color_hex = self._settings.get(["startup_color"])
+        pattern = self._settings.get(["startup_pattern"])
         self._logger.debug("Setting startup color: %s" % color_hex)
-        self._send_color(RgbTarget.BOTH, RgbPatterns.CONSTANT, color_hex)
+        self._send_color(RgbTarget.BOTH, pattern, color_hex)
 
     def on_idle(self):
         color_hex = self._settings.get(["idle_color"])
+        pattern = self._settings.get(["idle_pattern"])
         self._logger.debug("Setting idle color: %s" % color_hex)
-        self._send_color(RgbTarget.BOTH, RgbPatterns.CONSTANT, color_hex)
+        self._send_color(RgbTarget.BOTH, pattern, color_hex)
 
     def on_error(self):
         color_hex = self._settings.get(["error_color"])
+        pattern = self._settings.get(["error_pattern"])
         self._logger.debug("Setting error color: %s" % color_hex)
-        self._send_color(RgbTarget.BOTH, RgbPatterns.CONSTANT, color_hex)
+        self._send_color(RgbTarget.BOTH, pattern, color_hex)
 
     def on_heating(self):
         color_hex = self._settings.get(["heating_color"])
+        pattern = self._settings.get(["heating_pattern"])
         self._logger.debug("Setting heating color: %s" % color_hex)
-        self._send_color(RgbTarget.BOTH, RgbPatterns.CONSTANT, color_hex)
+        self._send_color(RgbTarget.BOTH, pattern, color_hex)
 
     def on_printing(self):
         color_hex = self._settings.get(["printing_color"])
+        pattern = self._settings.get(["printing_pattern"])
         self._logger.debug("Setting printing color: %s" % color_hex)
-        self._send_color(RgbTarget.BOTH, RgbPatterns.CONSTANT, color_hex)
+        self._send_color(RgbTarget.BOTH, pattern, color_hex)
 
     def on_paused(self):
         color_hex = self._settings.get(["paused_color"])
+        pattern = self._settings.get(["paused_pattern"])
         self._logger.debug("Setting printing color: %s" % color_hex)
-        self._send_color(RgbTarget.BOTH, RgbPatterns.CONSTANT, color_hex)
+        self._send_color(RgbTarget.BOTH, pattern, color_hex)
 
     def on_finished(self):
         color_hex = self._settings.get(["finished_color"])
+        pattern = self._settings.get(["finished_pattern"])
         self._logger.debug("Setting finished color: %s" % color_hex)
-        self._send_color(RgbTarget.BOTH, RgbPatterns.CONSTANT, color_hex)
+        self._send_color(RgbTarget.BOTH, pattern, color_hex)
 
     # End color mapping
 
