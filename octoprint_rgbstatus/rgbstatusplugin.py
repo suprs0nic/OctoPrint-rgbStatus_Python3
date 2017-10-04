@@ -65,7 +65,7 @@ class RgbStatusPlugin(SettingsPlugin, BlueprintPlugin, ShutdownPlugin):
     @BlueprintPlugin.route("/preview/<string:hex_color>/<string:pattern>", methods=["GET"])
     def preview(self, hex_color, pattern):
         self._logger.debug("Previewing color: %s" % hex_color)
-        self._send_color(RgbTarget.BOTH, pattern, "#" + hex_color)
+        self._send_color(RgbTarget.BOTH, int(pattern), "#" + hex_color)
         return make_response(jsonify({"color": hex_color}))
 
     @BlueprintPlugin.route("/setcolor/<string:name>/<string:hex_color>/<string:pattern>", methods=["GET"])
@@ -73,8 +73,9 @@ class RgbStatusPlugin(SettingsPlugin, BlueprintPlugin, ShutdownPlugin):
         setcolor = name + "_color"
         setpattern = name + "_pattern"
         self._settings.set([setcolor], "#" + hex_color)
-        self._settings.set([setpattern], pattern)
+        self._settings.set([setpattern], int(pattern))
         self._settings.save()
+        self.restore()
         return make_response(jsonify({"color": self._settings.get([setcolor])}))
 
     @BlueprintPlugin.route("/getcolor/<string:name>", methods=["GET"])
@@ -101,6 +102,7 @@ class RgbStatusPlugin(SettingsPlugin, BlueprintPlugin, ShutdownPlugin):
         for key in defaultvars.keys():
             self._settings.set([key],defaultvars.get(key))
         self._settings.save()
+        self.restore()
         return make_response(jsonify({"Settings": defaultvars.get(key)}))
 
 
