@@ -107,6 +107,10 @@ class RgbStatusPlugin(SettingsPlugin, BlueprintPlugin, ShutdownPlugin):
 
 
     @BlueprintPlugin.route("/restore", methods=["POST"])
+    def restorefromsite(self):
+        self._find_current_state()
+        return jsonify(lights_enabled=self._lights_enabled)
+
     def restore(self):
         self._find_current_state()
 
