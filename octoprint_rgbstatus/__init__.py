@@ -4,45 +4,44 @@ if __name__ == "__main__":
     # Directly ran
     import spirgbleds, time
 
-    print "Starting RGB driver"
-    spirgbleds.initialize(color=(0.0,0.0,0.0,0.0), transitionsEnabled=True, transitionRefreshInterval=20, transitionTime=200)
+    print("Starting RGB driver")
+    spirgbleds.initialize(color=(0.0, 0.0, 0.0, 0.0), transitionsEnabled=True, transitionRefreshInterval=20, transitionTime=200)
     spirgbleds.start()
 
-    print "Red"
+    print("Red")
     spirgbleds.set_pulsing_color(2, (1.0, 0.0, 0.0, 0.0), 2000)
-    raw_input()
-    print "Green"
+    input()
+    print("Green")
     spirgbleds.set_pulsing_color(2, (0.0, 1.0, 0.0, 0.0), 2000)
-    raw_input()
-    print "Blue"
+    input()
+    print("Blue")
     spirgbleds.set_pulsing_color(2, (0.0, 0.0, 1.0, 0.0), 2000)
-    raw_input()
-    print "White"
+    input()
+    print("White")
     spirgbleds.set_pulsing_color(2, (0.0, 0.0, 0.0, 1.0), 2000)
-    raw_input()
-    print "Off"
+    input()
+    print("Off")
     spirgbleds.set_constant_color(2, (0.0, 0.0, 0.0, 0.0))
-    raw_input()
+    input()
 
     for j in [2, 0, 1]:
-
-        print "Red"
+        print("Red")
         spirgbleds.set_constant_color(j, (1.0, 0.0, 0.0, 0.0))
-        raw_input()
-        print "Green"
+        input()
+        print("Green")
         spirgbleds.set_constant_color(j, (0.0, 1.0, 0.0, 0.0))
-        raw_input()
-        print "Blue"
+        input()
+        print("Blue")
         spirgbleds.set_constant_color(j, (0.0, 0.0, 1.0, 0.0))
-        raw_input()
-        print "White"
+        input()
+        print("White")
         spirgbleds.set_constant_color(j, (0.0, 0.0, 0.0, 1.0))
-        raw_input()
-        print "Off"
+        input()
+        print("Off")
         spirgbleds.set_constant_color(j, (0.0, 0.0, 0.0, 0.0))
-        raw_input()
+        input()
 
-    print "Stopping RGB driver"
+    print("Stopping RGB driver")
     spirgbleds.stop()
 else:
     # OctoPrint import
@@ -57,5 +56,3 @@ else:
         __plugin_hooks__ = {
             "octoprint.comm.protocol.gcode.sent": __plugin_implementation__.on_gcode_sent,
         }
-
-    
